@@ -1,0 +1,18 @@
+[package]
+name = "rulibs"
+version = "0.1.0"
+edition = "2021"
+
+[workspace]
+members = [
+    "rumbok"
+]
+
+
+[workspace.dependencies]
+quote = "1.0.37"
+rumbok = {path = "./rumbok"}
+syn = {version = "2.0.90",features =["full"]}
+
+[dependencies]
+rumbok.workspace = true
