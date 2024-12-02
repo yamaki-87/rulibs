@@ -8,6 +8,14 @@ fn main() {
 
     let f = Food::builder().genre(1).id(1).name("test".into()).build();
     println!("{}", f);
+
+    let item_price = ItemPrice::builder()
+        .end_date(Some("test".into()))
+        .id(1)
+        .item_id(2)
+        .build();
+
+    println!("{}", item_price);
 }
 
 #[derive(Data)]
@@ -22,4 +30,11 @@ struct Food {
     id: u32,
     name: String,
     genre: u32,
+}
+
+#[derive(Builder, ToString)]
+struct ItemPrice {
+    id: u32,
+    item_id: u32,
+    end_date: Option<String>,
 }

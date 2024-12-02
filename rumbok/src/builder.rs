@@ -41,19 +41,35 @@ pub fn builder(input: TokenStream) -> TokenStream {
         let field_name = f.ident.as_ref().unwrap();
         let field_type = &f.ty;
 
-        quote! {
-            pub fn #field_name(mut self,value:#field_type) -> Self{
-                self.#field_name = Some(value);
-                self
+        if is_option(field_type) {
+            quote! {
+                pub fn #field_name(mut self,value:#field_type) -> Self{
+                    self.#field_name = value;
+                    self
+                }
+            }
+        } else {
+            quote! {
+                pub fn #field_name(mut self,value:#field_type) -> Self{
+                    self.#field_name = Some(value);
+                    self
+                }
             }
         }
     });
 
     let builder_field = fields.iter().map(|f| {
         let field_name = f.ident.as_ref().unwrap();
+        let field_type = &f.ty;
 
-        quote! {
-            #field_name: self.#field_name.unwrap_or_default()
+        if is_option(field_type) {
+            quote! {
+                #field_name: self.#field_name
+            }
+        } else {
+            quote! {
+                #field_name: self.#field_name.unwrap_or_default()
+            }
         }
     });
     // unwrap_or_default()
