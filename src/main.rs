@@ -15,7 +15,9 @@ fn main() {
         .item_id(2)
         .build();
 
-    println!("{}", item_price);
+    let s = Some(1);
+    let d = "sfd";
+    println!("{:?}", d);
 }
 
 #[derive(Data)]
@@ -32,7 +34,7 @@ struct Food {
     genre: u32,
 }
 
-#[derive(Builder, ToString)]
+#[derive(Builder)]
 struct ItemPrice {
     id: u32,
     item_id: u32,
