@@ -7,7 +7,19 @@ mod builder;
 mod getter;
 mod no_args_constructor;
 mod setter;
+mod singleton;
 mod to_string;
+
+#[proc_macro_derive(Singleton)]
+pub fn derive_singleton(input: TokenStream) -> TokenStream {
+    TokenStream::from_iter(
+        vec![
+            all_args_constructor::all_args_constructor(input.clone()),
+            singleton::singleton(input),
+        ]
+        .into_iter(),
+    )
+}
 
 #[proc_macro_derive(Builder)]
 pub fn derive_builder(input: TokenStream) -> TokenStream {
