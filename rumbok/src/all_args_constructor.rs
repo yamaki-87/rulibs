@@ -2,7 +2,9 @@ use proc_macro::TokenStream;
 use quote::quote;
 use syn::{parse_macro_input, DeriveInput};
 
-pub fn all_args_constructor(input: TokenStream) -> TokenStream {
+use crate::Access;
+
+pub fn all_args_constructor(input: TokenStream, access: Access) -> TokenStream {
     let derive_input = parse_macro_input!(input as DeriveInput);
 
     let struct_name = derive_input.ident;
@@ -32,11 +34,26 @@ pub fn all_args_constructor(input: TokenStream) -> TokenStream {
         }
     });
 
-    let expand = quote! {
-        impl #struct_name {
-            pub fn new_all(#(#args),*)-> Self{
-                Self{
-                    #(#content),*
+    let expand = match access {
+        Access::Public => {
+            quote! {
+                impl #struct_name {
+                    pub fn new_all(#(#args),*)-> Self{
+                        Self{
+                            #(#content),*
+                        }
+                    }
+                }
+            }
+        }
+        Access::Private => {
+            quote! {
+                impl #struct_name {
+                    fn new_all(#(#args),*)-> Self{
+                        Self{
+                            #(#content),*
+                        }
+                    }
                 }
             }
         }

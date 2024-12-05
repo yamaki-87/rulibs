@@ -20,22 +20,25 @@ fn main() {
 mod test {
     use std::error::Error;
 
-    use rumbok::Singleton;
-
     #[test]
     fn singleton_test() -> Result<(), Box<dyn Error>> {
-        #[derive(Singleton)]
-        struct ItemStore {
-            pub id: u32,
-            pub name: String,
+        mod item {
+            use rumbok::Singleton;
+            #[derive(Singleton)]
+            pub struct ItemStore {
+                pub id: u32,
+                pub name: String,
+            }
         }
+        // item::ItemStore::new_allがないことを確認すること
+
         let test_num = 403u32;
         let test_str = "kanada";
 
-        let item_store1 = ItemStore::initialize_instance(test_num, test_str.to_string());
-        if let Some(item_store2) = ItemStore::get_instance() {
-            let addr1 = item_store1 as *const ItemStore;
-            let addr2 = item_store2 as *const ItemStore;
+        let item_store1 = item::ItemStore::initialize_instance(test_num, test_str.to_string());
+        if let Some(item_store2) = item::ItemStore::get_instance() {
+            let addr1 = item_store1 as *const item::ItemStore;
+            let addr2 = item_store2 as *const item::ItemStore;
 
             assert_eq!(addr1, addr2, "Singleton instances have diffrent addr!");
 

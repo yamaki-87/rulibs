@@ -10,11 +10,16 @@ mod setter;
 mod singleton;
 mod to_string;
 
+enum Access {
+    Public,
+    Private,
+}
+
 #[proc_macro_derive(Singleton)]
 pub fn derive_singleton(input: TokenStream) -> TokenStream {
     TokenStream::from_iter(
         vec![
-            all_args_constructor::all_args_constructor(input.clone()),
+            all_args_constructor::all_args_constructor(input.clone(), Access::Private),
             singleton::singleton(input),
         ]
         .into_iter(),
@@ -28,7 +33,7 @@ pub fn derive_builder(input: TokenStream) -> TokenStream {
 
 #[proc_macro_derive(AllArgsConstructor)]
 pub fn derive_all_args_constructor(input: TokenStream) -> TokenStream {
-    all_args_constructor::all_args_constructor(input)
+    all_args_constructor::all_args_constructor(input, Access::Public)
 }
 
 #[proc_macro_derive(NoArgsConstructor)]
@@ -58,7 +63,7 @@ pub fn data(input: TokenStream) -> TokenStream {
             to_string::to_string(input.clone()),
             getter::getter(input.clone()),
             setter::setter(input.clone()),
-            all_args_constructor::all_args_constructor(input.clone()),
+            all_args_constructor::all_args_constructor(input.clone(), Access::Public),
             no_args_constructor::no_args_constructor(input),
         ]
         .into_iter(),
