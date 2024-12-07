@@ -4,7 +4,7 @@ use proc_macro::TokenStream;
 
 mod all_args_constructor;
 mod builder;
-mod getter;
+mod getter_mut;
 mod no_args_constructor;
 mod setter;
 mod singleton;
@@ -54,7 +54,9 @@ pub fn derive_value(input: TokenStream) -> TokenStream {
 
 #[proc_macro_derive(Getter)]
 pub fn derive_getter(input: TokenStream) -> TokenStream {
-    getter::getter(input)
+    TokenStream::from_iter(
+        vec![value::value(input.clone()), getter_mut::getter_mut(input)].into_iter(),
+    )
 }
 
 #[proc_macro_derive(Setter)]
@@ -67,7 +69,8 @@ pub fn data(input: TokenStream) -> TokenStream {
     TokenStream::from_iter(
         vec![
             to_string::to_string(input.clone()),
-            getter::getter(input.clone()),
+            value::value(input.clone()),
+            getter_mut::getter_mut(input.clone()),
             setter::setter(input.clone()),
             all_args_constructor::all_args_constructor(input.clone(), Access::Public),
             no_args_constructor::no_args_constructor(input),

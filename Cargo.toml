@@ -12,7 +12,7 @@ members = [
 [workspace.dependencies]
 quote = "1.0.37"
 rumbok = {path = "./rumbok"}
-syn = {version = "2.0.90",features =["full"]}
+syn = {version = "2.0.89",features =["full"]}
 
 [dependencies]
 rumbok.workspace = true
