@@ -9,11 +9,6 @@ fn main() {
         .id(1)
         .item_id(2)
         .build();
-    let mut v = vec![];
-    v.push(1);
-    let s = v.get_mut(0).unwrap();
-    *s = 3;
-    println!("{:?}", &v);
 }
 
 #[cfg(test)]
