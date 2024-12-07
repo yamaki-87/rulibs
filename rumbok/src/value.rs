@@ -21,7 +21,7 @@ pub fn value(input: TokenStream) -> TokenStream {
 
         let getter_name = quote::format_ident!("get_{}", field_name);
         quote! {
-            pub fn #getter_name() -> #field_type{
+            pub fn #getter_name(&self) -> &#field_type{
                 &self.#field_name
             }
         }

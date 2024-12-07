@@ -17,7 +17,7 @@ pub fn to_string(input: TokenStream) -> TokenStream {
         let f_name = f.ident.as_ref().unwrap();
 
         quote! {
-            format!("{}: {}",stringify!(#f_name),self.#f_name)
+            format!("{}: {:?}",stringify!(#f_name),self.#f_name)
         }
     });
 
