@@ -19,7 +19,7 @@ fn main() {
 #[cfg(test)]
 mod test {
     use rumbok::*;
-    use std::error::Error;
+    use std::{error::Error, path::PathBuf};
 
     #[test]
     fn singleton_test() -> Result<(), Box<dyn Error>> {
@@ -60,24 +60,31 @@ mod test {
             id: u32,
             name: String,
             age: i32,
+            path: Option<PathBuf>,
         }
 
-        let (test_id, test_name, test_age) = (1, "alex", 30);
-        let person = Person::new_all(test_id, test_name.into(), test_age);
+        let (test_id, test_name, test_age, test_path) =
+            (1, "alex", 30, PathBuf::from(r"C:\program"));
+        let person = Person::new_all(test_id, test_name.into(), test_age, Some(test_path.clone()));
         assert_eq!(&test_id, person.get_id());
         assert_eq!(test_name, person.get_name());
         assert_eq!(&test_age, person.get_age());
+        assert_eq!(&test_path, person.get_path().as_ref().unwrap());
 
-        let (set_test_id, set_test_name, set_test_age) = (3, "muko", 1);
+        let (set_test_id, set_test_name, set_test_age, set_test_path) =
+            (3, "muko", 1, PathBuf::from("/usr/local"));
         let mut person = Person::default();
         person.set_id(set_test_id);
         person.set_name(set_test_name.into());
         person.set_age(set_test_age);
+        person.set_path(Some(set_test_path.clone()));
         assert_eq!(&set_test_id, person.get_id());
         assert_eq!(set_test_name, person.get_name());
         assert_eq!(&set_test_age, person.get_age());
+        assert_eq!(&set_test_path, person.get_path().as_ref().unwrap());
 
-        let (get_mut_test_id, get_mut_test_name, get_mut_test_age) = (2, "als", 39);
+        let (get_mut_test_id, get_mut_test_name, get_mut_test_age, get_mut_test_path) =
+            (2, "als", 39, PathBuf::from(r"C:\windows"));
         let mut person = Person::default();
         let id = person.get_mut_id();
         *id = get_mut_test_id;
@@ -85,9 +92,17 @@ mod test {
         *name = get_mut_test_name.into();
         let age = person.get_mut_age();
         *age = get_mut_test_age;
+        let path = person.get_mut_path();
+        *path = Some(get_mut_test_path.clone());
         assert_eq!(&get_mut_test_id, person.get_id());
         assert_eq!(get_mut_test_name, person.get_name());
         assert_eq!(&get_mut_test_age, person.get_age());
+        assert_eq!(&get_mut_test_path, person.get_path().as_ref().unwrap());
+
+        assert_eq!(
+            "Person { id: 2 name: \"als\" age: 39 path: Some(\"C:\\\\windows\") }",
+            format!("{}", person)
+        );
 
         Ok(())
     }
