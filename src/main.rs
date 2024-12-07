@@ -1,11 +1,6 @@
 use rumbok::{AllArgsConstructor, Builder, Data, Singleton, ToString};
 
 fn main() {
-    let mut person1 = Person::new_all(0, "james".into(), 20);
-    person1.set_age(1);
-    person1.set_name("konn".into());
-    println!("{}", person1);
-
     let f = Food::builder().genre(1).id(1).name("test".into()).build();
     println!("{}", f);
 
@@ -14,10 +9,16 @@ fn main() {
         .id(1)
         .item_id(2)
         .build();
+    let mut v = vec![];
+    v.push(1);
+    let s = v.get_mut(0).unwrap();
+    *s = 3;
+    println!("{:?}", &v);
 }
 
 #[cfg(test)]
 mod test {
+    use rumbok::*;
     use std::error::Error;
 
     #[test]
@@ -51,13 +52,45 @@ mod test {
 
         Ok(())
     }
-}
 
-#[derive(Data)]
-struct Person {
-    id: u32,
-    name: String,
-    age: i32,
+    #[test]
+    fn data_test() -> Result<(), Box<dyn Error>> {
+        #[derive(Data)]
+        struct Person {
+            id: u32,
+            name: String,
+            age: i32,
+        }
+
+        let (test_id, test_name, test_age) = (1, "alex", 30);
+        let person = Person::new_all(test_id, test_name.into(), test_age);
+        assert_eq!(&test_id, person.get_id());
+        assert_eq!(test_name, person.get_name());
+        assert_eq!(&test_age, person.get_age());
+
+        let (set_test_id, set_test_name, set_test_age) = (3, "muko", 1);
+        let mut person = Person::default();
+        person.set_id(set_test_id);
+        person.set_name(set_test_name.into());
+        person.set_age(set_test_age);
+        assert_eq!(&set_test_id, person.get_id());
+        assert_eq!(set_test_name, person.get_name());
+        assert_eq!(&set_test_age, person.get_age());
+
+        let (get_mut_test_id, get_mut_test_name, get_mut_test_age) = (2, "als", 39);
+        let mut person = Person::default();
+        let id = person.get_mut_id();
+        *id = get_mut_test_id;
+        let name = person.get_mut_name();
+        *name = get_mut_test_name.into();
+        let age = person.get_mut_age();
+        *age = get_mut_test_age;
+        assert_eq!(&get_mut_test_id, person.get_id());
+        assert_eq!(get_mut_test_name, person.get_name());
+        assert_eq!(&get_mut_test_age, person.get_age());
+
+        Ok(())
+    }
 }
 
 #[derive(Builder, ToString)]

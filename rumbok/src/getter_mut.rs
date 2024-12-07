@@ -2,7 +2,7 @@ use proc_macro::TokenStream;
 use quote::quote;
 use syn::{parse_macro_input, DeriveInput};
 
-pub fn getter(input: TokenStream) -> TokenStream {
+pub fn getter_mut(input: TokenStream) -> TokenStream {
     let derive_input = parse_macro_input!(input as DeriveInput);
 
     let fields = match derive_input.data {
@@ -19,10 +19,10 @@ pub fn getter(input: TokenStream) -> TokenStream {
         let field_name = f.ident.as_ref().unwrap();
         let field_type = &f.ty;
 
-        let getter_name: syn::Ident = quote::format_ident!("get_{}", field_name);
+        let getter_name: syn::Ident = quote::format_ident!("get_mut_{}", field_name);
         quote! {
-            pub fn #getter_name(&self) -> &#field_type{
-                &self.#field_name
+            pub fn #getter_name(&mut self) -> &mut #field_type{
+                &mut self.#field_name
             }
         }
     });
