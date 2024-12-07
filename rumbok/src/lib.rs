@@ -9,6 +9,7 @@ mod no_args_constructor;
 mod setter;
 mod singleton;
 mod to_string;
+mod value;
 
 enum Access {
     Public,
@@ -44,6 +45,11 @@ pub fn derive_no_args_constructor(input: TokenStream) -> TokenStream {
 #[proc_macro_derive(ToString)]
 pub fn derive_to_string(input: TokenStream) -> TokenStream {
     to_string::to_string(input)
+}
+
+#[proc_macro_derive(Value)]
+pub fn derive_value(input: TokenStream) -> TokenStream {
+    value::value(input)
 }
 
 #[proc_macro_derive(Getter)]
