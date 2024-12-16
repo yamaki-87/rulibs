@@ -14,6 +14,7 @@ pub fn setter(input: TokenStream) -> TokenStream {
     };
 
     let struct_name = derive_input.ident;
+    let (impl_generics, type_generics, where_clause) = derive_input.generics.split_for_impl();
 
     let setters = fields.iter().map(|f| {
         let field_name = f.ident.as_ref().unwrap();
@@ -29,7 +30,7 @@ pub fn setter(input: TokenStream) -> TokenStream {
     });
 
     let expanded = quote! {
-        impl #struct_name{
+        impl #impl_generics #struct_name #type_generics #where_clause{
             #(#setters)*
         }
     };

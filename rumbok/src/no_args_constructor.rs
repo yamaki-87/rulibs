@@ -6,6 +6,8 @@ pub fn no_args_constructor(input: TokenStream) -> TokenStream {
     let derive_input = parse_macro_input!(input as DeriveInput);
 
     let struct_name = derive_input.ident;
+    let (impl_generics, type_generics, where_clause) = derive_input.generics.split_for_impl();
+
     let fields = match derive_input.data {
         syn::Data::Struct(data_struct) => match data_struct.fields {
             syn::Fields::Named(fields_named) => fields_named.named,
@@ -23,7 +25,7 @@ pub fn no_args_constructor(input: TokenStream) -> TokenStream {
     });
 
     let expanded = quote! {
-        impl ::core::default::Default for #struct_name{
+        impl #impl_generics ::core::default::Default for #struct_name #type_generics #where_clause {
             fn default() -> Self {
                 Self{
                     #(#no_args_constructor),*

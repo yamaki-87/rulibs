@@ -13,6 +13,7 @@ fn main() {
 
 #[cfg(test)]
 mod test {
+
     use rumbok::*;
     use std::{error::Error, path::PathBuf};
 
@@ -99,6 +100,34 @@ mod test {
             format!("{}", person)
         );
 
+        fn generic_data_test() -> Result<(), Box<dyn Error>> {
+            mod inner {
+                use rumbok::*;
+
+                #[derive(Getter)]
+                pub struct Test<T, S> {
+                    on: T,
+                    an: S,
+                }
+
+                #[derive(Getter)]
+                pub struct Test1<T> {
+                    on: T,
+                    i: i32,
+                }
+
+                impl<T> Test1<T> {
+                    pub fn new(value: T) -> Self {
+                        Self { on: value, i: 0 }
+                    }
+                }
+            }
+            use inner::Test1;
+            let test1 = Test1::new("test1".to_string());
+            let on = test1.get_on();
+            Ok(())
+        }
+
         Ok(())
     }
 }
@@ -115,4 +144,14 @@ struct ItemPrice {
     id: u32,
     item_id: u32,
     end_date: Option<String>,
+}
+
+struct Test<T> {
+    s: T,
+}
+
+impl<T> Test<T> {
+    pub fn get_s(&self) -> &T {
+        &self.s
+    }
 }

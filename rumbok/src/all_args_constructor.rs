@@ -8,6 +8,7 @@ pub fn all_args_constructor(input: TokenStream, access: Access) -> TokenStream {
     let derive_input = parse_macro_input!(input as DeriveInput);
 
     let struct_name = derive_input.ident;
+    let (impl_generics, type_generics, where_clause) = derive_input.generics.split_for_impl();
 
     let fields = match derive_input.data {
         syn::Data::Struct(data_struct) => match data_struct.fields {
@@ -37,7 +38,7 @@ pub fn all_args_constructor(input: TokenStream, access: Access) -> TokenStream {
     let expand = match access {
         Access::Public => {
             quote! {
-                impl #struct_name {
+                impl #impl_generics #struct_name #type_generics #where_clause {
                     pub fn new_all(#(#args),*)-> Self{
                         Self{
                             #(#content),*
@@ -48,7 +49,7 @@ pub fn all_args_constructor(input: TokenStream, access: Access) -> TokenStream {
         }
         Access::Private => {
             quote! {
-                impl #struct_name {
+                impl #impl_generics #struct_name #type_generics #where_clause {
                     fn new_all(#(#args),*)-> Self{
                         Self{
                             #(#content),*
