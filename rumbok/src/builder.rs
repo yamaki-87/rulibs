@@ -6,6 +6,15 @@ pub fn builder(input: TokenStream) -> TokenStream {
     let derive_input = parse_macro_input!(input as DeriveInput);
 
     let struct_name = derive_input.ident;
+    let mut new_generics = derive_input.generics.clone();
+    for param in new_generics.params.iter_mut() {
+        if let syn::GenericParam::Type(type_param) = param {
+            type_param
+                .bounds
+                .push(syn::parse_quote!(::core::default::Default));
+        }
+    }
+    let (impl_generics, ty_generics, where_clause) = new_generics.split_for_impl();
     let fields = match derive_input.data {
         syn::Data::Struct(data_struct) => match data_struct.fields {
             syn::Fields::Named(fields_named) => fields_named.named,
@@ -76,22 +85,22 @@ pub fn builder(input: TokenStream) -> TokenStream {
     let builder_struct_name = quote::format_ident!("{}Builder", struct_name);
 
     let expanded = quote! {
-        struct #builder_struct_name{
+        struct #builder_struct_name #ty_generics #where_clause  {
             #(#builder),*
         }
 
-        impl #builder_struct_name{
+        impl #impl_generics #builder_struct_name #ty_generics #where_clause{
             #(#builder_func)*
 
-            pub fn build(self) -> #struct_name{
+            pub fn build(self) -> #struct_name #ty_generics{
                 #struct_name{
                 #(#builder_field),*
                 }
             }
         }
 
-        impl #struct_name{
-            pub fn builder() -> #builder_struct_name {
+        impl #impl_generics #struct_name #ty_generics #where_clause{
+            pub fn builder() -> #builder_struct_name #ty_generics {
                 #builder_struct_name{
                     #(#default_field),*
                 }

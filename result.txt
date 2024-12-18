@@ -1,0 +1,277 @@
+#![feature(prelude_import)]
+#[prelude_import]
+use std::prelude::rust_2021::*;
+#[macro_use]
+extern crate std;
+use rumbok::{AllArgsConstructor, Builder, Data, Singleton, ToString};
+use std::fmt::Debug;
+fn main() {
+    let f = Food::builder().genre(1).id(1).name("test".into()).build();
+    {
+        ::std::io::_print(format_args!("{0}\n", f));
+    };
+    let item_price = ItemPrice::builder()
+        .end_date(Some("test".into()))
+        .id(1)
+        .item_id(2)
+        .build();
+}
+struct Food<T> {
+    id: u32,
+    name: String,
+    genre: u32,
+    param: T,
+}
+struct FoodBuilder<T: ::core::default::Default> {
+    id: Option<u32>,
+    name: Option<String>,
+    genre: Option<u32>,
+    param: Option<T>,
+}
+impl<T: ::core::default::Default> FoodBuilder<T> {
+    pub fn id(mut self, value: u32) -> Self {
+        self.id = Some(value);
+        self
+    }
+    pub fn name(mut self, value: String) -> Self {
+        self.name = Some(value);
+        self
+    }
+    pub fn genre(mut self, value: u32) -> Self {
+        self.genre = Some(value);
+        self
+    }
+    pub fn param(mut self, value: T) -> Self {
+        self.param = Some(value);
+        self
+    }
+    pub fn build(self) -> Food {
+        Food {
+            id: self.id.unwrap_or_default(),
+            name: self.name.unwrap_or_default(),
+            genre: self.genre.unwrap_or_default(),
+            param: self.param.unwrap_or_default(),
+        }
+    }
+}
+impl<T: ::core::default::Default> Food<T> {
+    pub fn builder() -> FoodBuilder {
+        FoodBuilder {
+            id: None,
+            name: None,
+            genre: None,
+            param: None,
+        }
+    }
+}
+impl<T: std::fmt::Debug> std::fmt::Display for Food<T> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_fmt(
+            format_args!(
+                "{0} {{ {1} }}",
+                "Food",
+                <[_]>::into_vec(
+                        #[rustc_box]
+                        ::alloc::boxed::Box::new([
+                            ::alloc::__export::must_use({
+                                let res = ::alloc::fmt::format(
+                                    format_args!("{0}: {1:?}", "id", self.id),
+                                );
+                                res
+                            }),
+                            ::alloc::__export::must_use({
+                                let res = ::alloc::fmt::format(
+                                    format_args!("{0}: {1:?}", "name", self.name),
+                                );
+                                res
+                            }),
+                            ::alloc::__export::must_use({
+                                let res = ::alloc::fmt::format(
+                                    format_args!("{0}: {1:?}", "genre", self.genre),
+                                );
+                                res
+                            }),
+                            ::alloc::__export::must_use({
+                                let res = ::alloc::fmt::format(
+                                    format_args!("{0}: {1:?}", "param", self.param),
+                                );
+                                res
+                            }),
+                        ]),
+                    )
+                    .join(" "),
+            ),
+        )
+    }
+}
+struct ItemPrice {
+    id: u32,
+    item_id: u32,
+    end_date: Option<String>,
+}
+struct ItemPriceBuilder {
+    id: Option<u32>,
+    item_id: Option<u32>,
+    end_date: Option<String>,
+}
+impl ItemPriceBuilder {
+    pub fn id(mut self, value: u32) -> Self {
+        self.id = Some(value);
+        self
+    }
+    pub fn item_id(mut self, value: u32) -> Self {
+        self.item_id = Some(value);
+        self
+    }
+    pub fn end_date(mut self, value: Option<String>) -> Self {
+        self.end_date = value;
+        self
+    }
+    pub fn build(self) -> ItemPrice {
+        ItemPrice {
+            id: self.id.unwrap_or_default(),
+            item_id: self.item_id.unwrap_or_default(),
+            end_date: self.end_date,
+        }
+    }
+}
+impl ItemPrice {
+    pub fn builder() -> ItemPriceBuilder {
+        ItemPriceBuilder {
+            id: None,
+            item_id: None,
+            end_date: None,
+        }
+    }
+}
+pub struct Test<T, S, U> {
+    on: T,
+    an: S,
+    uo: U,
+    fd: Option<String>,
+    ui: i32,
+}
+impl<T: std::fmt::Debug, S: std::fmt::Debug, U: std::fmt::Debug> std::fmt::Display
+for Test<T, S, U> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_fmt(
+            format_args!(
+                "{0} {{ {1} }}",
+                "Test",
+                <[_]>::into_vec(
+                        #[rustc_box]
+                        ::alloc::boxed::Box::new([
+                            ::alloc::__export::must_use({
+                                let res = ::alloc::fmt::format(
+                                    format_args!("{0}: {1:?}", "on", self.on),
+                                );
+                                res
+                            }),
+                            ::alloc::__export::must_use({
+                                let res = ::alloc::fmt::format(
+                                    format_args!("{0}: {1:?}", "an", self.an),
+                                );
+                                res
+                            }),
+                            ::alloc::__export::must_use({
+                                let res = ::alloc::fmt::format(
+                                    format_args!("{0}: {1:?}", "uo", self.uo),
+                                );
+                                res
+                            }),
+                            ::alloc::__export::must_use({
+                                let res = ::alloc::fmt::format(
+                                    format_args!("{0}: {1:?}", "fd", self.fd),
+                                );
+                                res
+                            }),
+                            ::alloc::__export::must_use({
+                                let res = ::alloc::fmt::format(
+                                    format_args!("{0}: {1:?}", "ui", self.ui),
+                                );
+                                res
+                            }),
+                        ]),
+                    )
+                    .join(" "),
+            ),
+        )
+    }
+}
+impl<T, S, U> Test<T, S, U> {
+    pub fn get_on(&self) -> &T {
+        &self.on
+    }
+    pub fn get_an(&self) -> &S {
+        &self.an
+    }
+    pub fn get_uo(&self) -> &U {
+        &self.uo
+    }
+    pub fn get_fd(&self) -> &Option<String> {
+        &self.fd
+    }
+    pub fn get_ui(&self) -> &i32 {
+        &self.ui
+    }
+}
+impl<T, S, U> Test<T, S, U> {
+    pub fn get_mut_on(&mut self) -> &mut T {
+        &mut self.on
+    }
+    pub fn get_mut_an(&mut self) -> &mut S {
+        &mut self.an
+    }
+    pub fn get_mut_uo(&mut self) -> &mut U {
+        &mut self.uo
+    }
+    pub fn get_mut_fd(&mut self) -> &mut Option<String> {
+        &mut self.fd
+    }
+    pub fn get_mut_ui(&mut self) -> &mut i32 {
+        &mut self.ui
+    }
+}
+impl<T, S, U> Test<T, S, U> {
+    pub fn set_on(&mut self, value: T) {
+        self.on = value;
+    }
+    pub fn set_an(&mut self, value: S) {
+        self.an = value;
+    }
+    pub fn set_uo(&mut self, value: U) {
+        self.uo = value;
+    }
+    pub fn set_fd(&mut self, value: Option<String>) {
+        self.fd = value;
+    }
+    pub fn set_ui(&mut self, value: i32) {
+        self.ui = value;
+    }
+}
+impl<T, S, U> Test<T, S, U> {
+    pub fn new_all(on: T, an: S, uo: U, fd: Option<String>, ui: i32) -> Self {
+        Self {
+            on: on,
+            an: an,
+            uo: uo,
+            fd: fd,
+            ui: ui,
+        }
+    }
+}
+impl<
+    T: ::core::default::Default,
+    S: ::core::default::Default,
+    U: ::core::default::Default,
+> ::core::default::Default for Test<T, S, U> {
+    fn default() -> Self {
+        Self {
+            on: ::core::default::Default::default(),
+            an: ::core::default::Default::default(),
+            uo: ::core::default::Default::default(),
+            fd: ::core::default::Default::default(),
+            ui: ::core::default::Default::default(),
+        }
+    }
+}

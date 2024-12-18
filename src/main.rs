@@ -1,15 +1,6 @@
 use rumbok::{AllArgsConstructor, Builder, Data, Singleton, ToString};
-
-fn main() {
-    let f = Food::builder().genre(1).id(1).name("test".into()).build();
-    println!("{}", f);
-
-    let item_price = ItemPrice::builder()
-        .end_date(Some("test".into()))
-        .id(1)
-        .item_id(2)
-        .build();
-}
+use std::fmt::Debug;
+fn main() {}
 
 #[cfg(test)]
 mod test {
@@ -102,29 +93,21 @@ mod test {
 
         fn generic_data_test() -> Result<(), Box<dyn Error>> {
             mod inner {
+                use std::fmt::{Debug, Display};
+
                 use rumbok::*;
 
-                #[derive(Getter)]
-                pub struct Test<T, S> {
+                #[derive(Data)]
+                pub struct Test<T, S, U> {
                     on: T,
                     an: S,
-                }
-
-                #[derive(Getter)]
-                pub struct Test1<T> {
-                    on: T,
-                    i: i32,
-                }
-
-                impl<T> Test1<T> {
-                    pub fn new(value: T) -> Self {
-                        Self { on: value, i: 0 }
-                    }
+                    uo: U,
+                    fd: Option<String>,
+                    ui: i32,
                 }
             }
-            use inner::Test1;
-            let test1 = Test1::new("test1".to_string());
-            let on = test1.get_on();
+            use inner::*;
+            let test = Test::new_all("test", 21, "test1".to_string(), Some("test2".into()), 1);
             Ok(())
         }
 
@@ -133,25 +116,24 @@ mod test {
 }
 
 #[derive(Builder, ToString)]
-struct Food {
+struct Food<T> {
     id: u32,
     name: String,
+    param: T,
     genre: u32,
-}
-
-#[derive(Builder)]
-struct ItemPrice {
-    id: u32,
-    item_id: u32,
     end_date: Option<String>,
 }
 
-struct Test<T> {
-    s: T,
+#[derive(Data)]
+pub struct Test<T, S, U> {
+    on: T,
+    an: S,
+    uo: U,
+    fd: Option<String>,
+    ui: i32,
 }
 
-impl<T> Test<T> {
-    pub fn get_s(&self) -> &T {
-        &self.s
-    }
+#[derive(Singleton)]
+struct Service {
+    c: Option<u32>,
 }

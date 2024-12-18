@@ -2,11 +2,23 @@ use proc_macro::TokenStream;
 use quote::quote;
 use syn::{parse_macro_input, DeriveInput};
 
+// rustのシングルトンでジェネリックスを持つ構造体を定義するのは難しい
+
 pub fn singleton(input: TokenStream) -> TokenStream {
     let derive_input = parse_macro_input!(input as DeriveInput);
 
     let struct_name = derive_input.ident;
-
+    // let (impl_generics, type_generics, where_clause) = derive_input.generics.split_for_impl();
+    // fieldに名前付き構造体のみ対応
+    // Ok
+    // struct Test<T> {
+    //     a:T,
+    //     b:Option<i32>,
+    //     c:String,
+    // }
+    //
+    // NG
+    // struct Tw(i32)
     let fields = match derive_input.data {
         syn::Data::Struct(data_struct) => match data_struct.fields {
             syn::Fields::Named(fields_named) => fields_named.named,
@@ -31,12 +43,11 @@ pub fn singleton(input: TokenStream) -> TokenStream {
             #field_name
         }
     });
-
     let expanded = quote! {
         static SINGLETON:std::sync::OnceLock<#struct_name> = std::sync::OnceLock::new();
 
-        impl #struct_name{
-            pub fn initialize_instance(#(#args),*) -> &'static #struct_name{
+        impl #struct_name {
+            pub fn initialize_instance(#(#args),*) -> &'static #struct_name {
                 SINGLETON.get_or_init(|| {#struct_name::new_all(#(#func_args),*)})
             }
 
