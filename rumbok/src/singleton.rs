@@ -1,6 +1,6 @@
 use proc_macro::TokenStream;
 use quote::quote;
-use syn::{parse_macro_input, DeriveInput};
+use syn::{parse_macro_input, parse_quote, DeriveInput};
 
 // rustのシングルトンでジェネリックスを持つ構造体を定義するのは難しい
 
@@ -43,16 +43,22 @@ pub fn singleton(input: TokenStream) -> TokenStream {
             #field_name
         }
     });
+
+    let upper_sturct_name = struct_name.clone().to_string().to_uppercase();
+    // 名前の重複を避けるため
+    let singleton_name = quote::format_ident!("SINGLETON_{}", upper_sturct_name);
     let expanded = quote! {
-        static SINGLETON:std::sync::OnceLock<#struct_name> = std::sync::OnceLock::new();
+
+        static #singleton_name:std::sync::OnceLock<#struct_name> = std::sync::OnceLock::new();
 
         impl #struct_name {
+
             pub fn initialize_instance(#(#args),*) -> &'static #struct_name {
-                SINGLETON.get_or_init(|| {#struct_name::new_all(#(#func_args),*)})
+                #singleton_name.get_or_init(|| {#struct_name::new_all(#(#func_args),*)})
             }
 
             pub fn get_instance() -> Option<&'static #struct_name>{
-                SINGLETON.get()
+                #singleton_name.get()
             }
         }
     };
