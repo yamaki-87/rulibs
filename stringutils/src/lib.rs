@@ -63,6 +63,85 @@ pub fn is_not_empty(target: impl OptionalAsRefStr) -> bool {
     !is_empty(target)
 }
 
+pub fn is_numeric(target: impl OptionalAsRefStr) -> bool {
+    match target.as_opt_str() {
+        Some(value) => {
+            let mut result = true;
+            for char in value.chars(){
+                if !char.is_numeric(){
+                    result = false;
+                }
+            }
+
+            result
+        },
+        None => false,
+    }
+}
+
+pub fn is_alpha(target: impl OptionalAsRefStr) -> bool {
+    match target.as_opt_str() {
+        Some(value) => {
+            let mut result = true;
+            for char in value.chars(){
+                if !char.is_alphabetic(){
+                    result = false;
+                }
+            }
+            result
+        },
+        None => false,
+    }
+}
+
+pub fn is_alpha_space(target: impl OptionalAsRefStr) -> bool {
+    match target.as_opt_str() {
+        Some(value) => {
+            let mut result = true;
+            for char in value.chars(){
+                if !char.is_alphabetic() && !char.is_whitespace(){
+                    result = false;
+                }
+            }
+            result
+        },
+        None => false,
+    }
+}
+
+pub fn is_alpha_numeric(target: impl OptionalAsRefStr) -> bool {
+    match target.as_opt_str() {
+        Some(value) => {
+            let mut result = true;
+            for char in value.chars(){
+                if !char.is_numeric() && !char.is_alphabetic(){
+                    result = false;
+                }
+            }
+
+            result
+        },
+        None => false,
+    }
+}
+
+pub fn is_numeric_space(target: impl OptionalAsRefStr) -> bool{
+    match target.as_opt_str() {
+        Some(value) => {
+            let mut result = true;
+            for char in value.chars(){
+                if !char.is_numeric() && !char.is_whitespace(){
+                    result = false;
+                }
+            }
+
+            result
+        },
+        None => false,
+    }
+}
+
+
 pub fn capitalize(target: impl OptionalAsRefStr) -> String {
     match target.as_opt_str() {
         Some(value) => {
