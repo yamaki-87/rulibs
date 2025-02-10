@@ -12,7 +12,13 @@ members = [
 [workspace.dependencies]
 quote = "1.0.37"
 rumbok = {path = "./rumbok"}
+stringutils = {path = "./stringutils"}
 syn = {version = "2.0.89",features =["full"]}
+regex = "1.11.1"
+
+[workspace.dev-dependencies]
+criterion = "0.5.1"
 
 [dependencies]
 rumbok.workspace = true
+stringutils.workspace = true

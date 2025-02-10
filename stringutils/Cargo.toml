@@ -1,6 +1,15 @@
 [package]
 name = "stringutils"
 version = "0.1.0"
-edition = "2024"
+edition = "2021"
+
+[[bench]]
+name = "performance"
+path = "benches/performance.rs"
+harness = false
 
 [dependencies]
+regex.workspace = true
+
+[dev-dependencies]
+criterion = "0.5.1"
